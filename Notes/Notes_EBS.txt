@@ -1,0 +1,88 @@
+
+https://iaasacademy.com/aws-certified-solutions-architect-associate-exam/amazon-ec2-encrypting-ebs-boot-volumes-exam-tips/
+https://iaasacademy.com/aws-certified-solutions-architect-associate-exam/amazon-ebs-volumes-snapshots-exam-tips/
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Amazon EBS Volumes : 
+
+An Amazon EBS volume is a durable, block-level storage device that you can attach to a single EC2 instance. You can use EBS volumes as primary storage for data that requires frequent updates, such as the system drive for an instance or storage for a database application. You can also use them for throughput-intensive applications that perform continuous disk scans. EBS volumes persist independently from the running life of an EC2 instance.
+
+After a volume is attached to an instance, you can use it like any other physical hard drive. EBS volumes are flexible. For current-generation volumes attached to current-generation instance types, you can dynamically increase size, modify the provisioned IOPS capacity, and change volume type on live production volumes.
+
+They are in same AZ as EC2 instance.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Amazon EBS provides the following volume types:
+
+General Purpose SSD (gp2)
+Provisioned IOPS SSD (io1)
+Throughput Optimized HDD (st1)
+Cold HDD (sc1)
+Magnetic (standard).
+
+Key Features of EBS Volumes : 
+--- Data Durability – EBS Volumes are automatically replicated within the availability zone it was created in to prevent data loss due to hardware failures. In addition, volumes can be attached as native block devices similar to physical hard drives and the instance can interact with the volume including formatting the volume with a file system and installing applications. You can stripe data across the volumes for increased I/O and throughput performance.
+
+--- Data Persistence – EBS Volumes can exist independently of any server instance similar to virtual hard disks that can be attached to Virtual Machines. By default, EBS volumes that are attached to a running instance automatically detach from the instance with their data intact when that instance is terminated. This is except where you have the root volume attached when you launch the instance and the ‘Delete on Termination’ checkbox is ticked.  In addition, with EBS backed instances, you can stop and restart that instance without affecting the data stored in the attached volume.
+
+--- Data encryption – You can create encrypted EBS volumes with the encryption option available when creating new volumes. Amazon EBS encryption uses 256-bit Advanced Encryption Standard algorithms (AES-256) and an Amazon-managed key infrastructure. You can use a customer master key (CMK) for your EBS volumes too.
+
+--- Snapshots – You can create a point in time snapshot of any EBS volumes to store backups of your data. Snapshots are stored in Amazon S3, with redundancy across multiple Availability Zones. In addition, you can create periodic snapshots of the volume which are incremental backups of the data. Snapshots can be used to create multiple new EBS volumes, expand the size of a volume, or move volumes across Availability Zones. 
+  Snapshots of encrypted EBS volumes are automatically encrypted. 
+  Snapshots can also be shared between AWS accounts or made publicly available.If you need to create a snapshot of a volume that is being us as a boot/root device, you must first stop the instance before taking the snapshot. If you don’t. Amazon will automatically stop the instance when you attempt to take the snapshot and as such, it would be advisable to plan a schedule for taking such snapshots in live production environments.
+  
+--- volumes can be modified at runtime, by going to the Volumes section and updating it. Like updating the size from 500gb to 1000 gb.
+   You can also change the type of the volume, liek change to Provisioned IOPS. It effects the performance of the EC2 instance, and takes some time to process.
+   So the storage can be increased or modified dynamically, just by going to volumes section.   
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Encrypting snapshots
+Snapshots of encrypted volumes are automatically encrypted.
+Volumes that are created from encrypted snapshots are automatically encrypted.
+You can share snapshots, but only if they are unencrypted. These snapshots can also be shared with other AWS accounts or made public.
+
+When you copy an unencrypted snapshot that you own, you can encrypt it during the copy process. This process is used to encrypt an unencrypted volume. 
+	Create a snapshot of the unencrypted volume, Create a copy of the snapshot and select encrypt . Create an AMI from the encrypted snapshot and use that AMI to launch a new instance.
+	
+When you copy an encrypted snapshot that you own, you can re-encrypt it with a different key during the copy process.
+You can now encrypt Root Device volumes upon creation of the EC2 instance : 
+If you have an unencrypted root device volume that needs to be encrypted, then : 
+   -- Create a snapshot of the unencrypted root device volume. 
+   -- create a copy of the snapshot and select the encrypt option.
+   -- Create an AMI from the encrypted snapshot.
+   -- Use that AMI to launch new encrypted instances.
+   
+Instance store volumes are sometimes called Ephemeral storage.
+Instance storage volumes cannot be stopped . If the underlying host fails, you will lose your data.   
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Move a volume to a new availability zone : 
+like from US east 1 to US east 2 : 
+To replicate EBS into a differnt AZ, 
+create a snapshot of the volume, then create its image and launch the EC2 with this image.
+
+1. Go to actions, create a snapshot.. Snapshot is a photograph of the volume at that instance.
+2. now, click on the snapshot , actions, and create an image. We will use this image to be deployed to other availability zones.
+3. If we want to create multiple deployments of the image, use the option 'Hardware assisted virtualization' while launching the image, in the option 'Virtualization type'.
+4. Now, once the image is created, we can use this to provision new EC2 instances.
+5. Images created will be found under AMIs.
+6. Go to AMis. select the image and click Launch from above.
+7. We see all EC2 instances available for launching, so we can configure the instance details.
+8. HVM will give you many more EC2 options, if very less EC2 options are visible for selection, then it is possible that you selected Paravirtual type virtualization.
+9. Now complete and launch the EC2, select a different subnet in a different AZ, so that this instance is launched in a new AZ, but with the copy of the same EBS.
+
+Copy a AMI from one region to another : 
+We can also copy a volume from one region to another.
+Go to AMIs, select Actions and copy AMI.
+Select destination Region.
+Then complete the copy process.
+Once it is copied to the new region, we can launch it from there and then the volume would be launching a new instance in a new region altogether, instead of a new AZ.
+
+Also, you can copy the AMI into a different AZ or a different region.
+
+When you terminate an EC2, the root device volume is terminated but the attached volumes are persisted, not deleted.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EBS and Instance store : 
+
+

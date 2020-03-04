@@ -1,0 +1,267 @@
+EC2 : 
+It is a web service that provides resizable compute capacity in the cloud. It reduces the time required to obtain and boot new server instances to minutes, allowing you to scale capacity up and down, as per requirements.
+
+4 different pricing models : 
+  1.  On Demand : Allows you to pay a fixed rate by the hour with no committment.
+  2.  Reserved : Provides capacity reservation, and offer slight discount on the hourly charge for an instance. Contract terms are 1 year or 3 year terms.
+  3.  Spot instance : Enables you to bid whatever price you want for the instance capacity, works like stock market. Provides greater savings if your application has flexible start and end timings. 
+  4.  Dedicated hosts : Physical EC2 server dedicated for your use. They can allow you to reduce costs by allowing you to use your existing server bound software licenses.
+  
+  If the spot instance is stopped by AWS, you will not be charged for the partial hour of usage. But, if you terminate the instance yourself, you will be charged for any hour in which the instance ran. 
+
+
+Instance Types : 
+ -- FIGHT DR McPx zau (fight Dr Mac pix Zee AU)
+  
+F - FPGA
+I - IOPS 
+G - Graphics
+H - High throughput 
+T - General cheap purpose / T2 Micro
+D - density 
+R - RAM 
+M - Main choice for general purpose apps 
+C - compute 
+P - Graphics (Think Pics)
+X - Extreme memory 
+Z - Extreme memory and CPU 
+A - Arm based workloads
+U - Bare metal 
+
+Difference between Dedicated instance and dedicated hosts: 
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EBS : 
+-- Termination protection is turned off by default, so if you want to protect your EC2 instance from being accidently deleted, turn ON the Termination protection. By doing so, no one can terminate the EC2 unless the option is turned off.
+
+-- On and EBS backed instance, the default action is for the root EBS volume to be deleted when the instance is terminated. The additionally attached EBS volumes are not deleted when the instance is terminated, unless the checkbox is checked to delete the additional EBS volumes on termination of instance.
+
+-- EBS root volumes of your default AMIs can be encrypted. You can also use a third party tool like Bit Locker to encrypt the root volume, or this can be done while creating AMIs, in the AWS console or by using the API.
+
+-- Additional volumes can be encrypted.
+
+EBS types : 
+
+General purpose SSD : general purpose that balances price and performance for most of the transactional workloads 
+                     -- 1 GB to 16 Tib 
+					 -- gp2
+					 -- max iops per volume 16000 
+					 
+Provisioned IOPS SSD
+                    : highest performance SSD designed for mission critical apps 
+					-- Databases
+					-- io1
+					-- 4Gib - 16 Tib 
+					-- 64000 iops per volume
+					
+Throughout Optimized HDD 
+                    : Low cost HDD volume designed for frequently accessed, throughput intensive workloads.
+                    : Big data and warehouses
+                    : st1 
+                    : 500 Gib - 16 Tib, 500 iops  	
+					
+Cold HDD 
+                    : Lowest cost HDD volume for less frequently accessed workloads 
+					-- File servers
+                    - sc1 
+					-- 500 Gib to 16Tib
+                    - 250 
+					
+Magnetic EBS
+                     : previous generation 
+					 : workloads where data is infrequently accessed 
+                     : standard, 1Gib to 1Tib				
+Snapshots :
+ 
+Volumes exist on EBS, think of EBs as a virtual hard disk.
+Snapshot exist on S3, think of Snapshot as a photograph of the disk.
+Snapshots are point in time copies of volumes. 
+Snapshots are incremental - this means that blocks which have changed since the last snapshot are moved to S3. 
+If it is the first snapshot it may take time to create.
+
+To create a snapshot for the volumes that serve as root devices, you should stop the instance before taking the snapshot.
+However, you can also take the snapshot while the instance is running. 
+You can create AMIs from both volumes and snapshots.
+You can change EBS volume sizes on the fly, including changing the size and storage type.
+volumes will always be in the same AZ as the EC2 instance. 
+					 
+					 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Security Groups :
+
+-- All inbound traffic is blocked by default. 
+
+-- All outbound traffic is allowed,
+
+-- Changes to security groups take effect immediately.
+
+-- You can have any number of EC2 instances within a security group.
+
+-- You can have multiple security groups attached to EC2 instances. 
+
+-- Security Groups are stateful. Means that when you open up a port, e.g. 80, it would be opened for both inbound and outbound traffic.
+
+-- You cannot block specific IP addresses using security groups, instead use Network ACLs.
+
+-- You can specify allow rules, but not deny rules.
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+CloudWatch : 
+
+It is a monitoring service to monitor the AWS resources and applications that run on AWS.
+Monitors performance.
+
+It can monitor things like : 
+	-- Compute : 
+	    -- EC2 instance
+		-- Autoscaling groups
+		-- Elastic Load balancers
+		-- Route 53 health checks
+	-- Storage and content delivery : 
+        -- EBS volumes
+        -- Storage Gateways 
+        -- Cloud Front 
+
+host Level metrics consist of : 
+    -- CPU
+    -- Network
+    -- Disk
+    -- Status check
+
+What can you do with cloudwatch :
+Dashboards : create dashboards to see what is happening with your aWS environment. 
+Alarms : Allows you to set Alarms that notify you when particular thresholds are reached. 
+Events : Help you to respond to state changes i your AWS resources. 
+Logs : Logs help you aggregate, monitorand store logs.
+
+AWS CloudTrail : 
+It increases visibility into your user and resource activity by recording AWS Management console actions and API calls. 
+You can identify which users and accounts called AWS, the source IP address from which the calls were made, and when the calls occurred.
+
+ -- Cloudwatch monitors performance, whereas Cloudtrail monitors API calls in the AWS platform.
+
+Remember : 
+-- Cloudwatch is used for monitoring performance
+-- Cloudwatch can monitor most of AWS and the applications that run on AWS.
+-- Cloudwatch with EC2 will monitor events every 5 minutes by default.
+-- You can have 1 minute intervals by turning on detailed monitoring.
+-- You can also create cloudwatch alarms which trigger notifications.
+-- cloudwatch is all about performance and cloudtrail is all about Auditing.
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+CLI : 
+you can access AWs from anywhere in the world just by using the CLI . 
+You need to setup access in IAM.
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+Roles : 
+
+Roles are more secure than storing your access key and secret access key on an individual EC2 instances.
+Roles are easier to manage.
+Roles can be assigned to an EC2 instance after it is created using both the console and command line. 
+Roles are universal, you can use them in any region.
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+Bootstrap scripts : 
+They run when a instance first boots.
+Can be a powerful way of automating software installs and updates.
+------------------------------------------------------------------------------------------------------------------------------------
+
+Instance metadata and user data : 
+Used to get information about an instance such as public IP.
+curl http://169.254.169.254/latest/meta-data/
+curl http://169.254.169.254/latest/user-data/    // this is the bootstrap script loaded when creating instance.
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+Elastic File System : 
+Supports the Network file system version 4 NFSV4 protocol.
+You can pay only for the storage you use. 
+Can scale up to petabytes.
+Can support thousands of concurrent NFS connections. 
+An EBS cannot be shared between multiple EC2 instances, but an EFS can be shared between multiple EC2 instances.
+Data is stored across mutliple AZs within a region.
+Read after write consistency. 
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+Placement Groups : 
+The way of placing your EC2 instanceS : 
+
+-- Clustered Placement Groups : 
+	 : All instances in the same AZ and very close to each other 
+	 : Used when requirements are low network latency / high network throughput 
+	 
+-- Spread Placement Group :
+     : Individual critical EC2 instances.
+	 : Independent instances which are not dependent on each other, and also in different AZs, so that if one instance fails, then the other ones are not impacted.
+	 
+-- Partitioned placement group  
+     : multiple EC2 instances,  like for HDFS, HBase and Cassandra.
+	 : Multiple instances in a partition and each partition is in a separate rack / separate hardware from the other ones.
+	 
+Clustered Placement group cannot span multiple AZs whereas the other ones can.
+
+The name you specify for your placement group must be unique within your AWS account.
+
+Only certain types of instances can be launched in a placement group : Compute optimized, memory optimized,  GPU, storage optimized.
+
+AWS recommend homogenous instances within clustered placement groups.
+
+You cannot merge placement groups.
+You cannot move an existing instance into a placement group. you can create an AMI from your existing instance, and then launch a new instance from the AMI into a placement group.  	 
+
+Spread placement groups have a specific limitation that you can only have a maximum of 7 running instances per Availability Zone and therefore this is the only correct option. 
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+Questions : 
+Can I move a reserved instance from one region to another?
+No  : Depending on you type of RL you can You can modify the AZ, scope, network platform, or instance size (within the same instance type), but not Region. In some circumstances you can sell RIs, but only if you have a US bank account.
+
+You need to know both the private IP address and public IP address of your EC2 instance. You should : 
+Retrieve the instance Metadata from http://169.254.169.254/latest/meta-data/
+Instance Metadata and User Data can be retrieved from within the instance via a special URL. Similar information can be extracted by using the API via the CLI or an SDK.
+
+If an Amazon EBS volume is an additional partition (not the root volume), can I detach it without stopping the instance?
+Yes
+
+You can add multiple volumes to an EC2 instance and then create your own RAID 5/RAID 10/RAID 0 configurations using those volumes.:
+yes
+
+Individual instances are provisioned ________.
+in AZs
+
+Is it possible to perform actions on an existing Amazon EBS Snapshot?
+Yes, using AWS APIs, CLI and AWS console.
+
+You have developed a new web application in the US-West-2 Region that requires six Amazon Elastic Compute Cloud (EC2) instances to be running at all times. US-West-2 comprises three Availability Zones (us-west-2a, us-west-2b, and us-west-2c). You need 100 percent fault tolerance: should any single Availability Zone in us-west-2 become unavailable, the application must continue to run. How would you make sure 6 servers are ALWAYS available? NOTE: each answer has 2 possible deployment configurations. Select the answer that gives TWO satisfactory solutions to this scenario.
+Solution 1: us-west-2a with six EC2 instances, us-west-2b with six EC2 instances, and us-west-2c with no EC2 instances. Solution 2: us-west-2a with three EC2 instances, us-west-2b with three EC2 instances, and us-west-2c with three EC2 instances.
+
+The use of a cluster placement group is ideal _______.
+Your fleet of EC2 instances requires high network throughput and low latency within a single availability zone
+
+Which AWS CLI command should I use to create a snapshot of an EBS volume? :
+aws ec2 create-snapshot
+
+I can change the permissions of a role, even if that role is already assigned to an existing EC2 instance, and these changes will take effect immediately. : 
+true
+
+To retrieve instance metadata or user data you will need to use the following IP Address:
+http://169.254.169.254
+
+Will an Amazon EBS root volume persist independently from the life of the terminated EC2 instance to which it was previously attached? In other words, if I terminated an EC2 instance, would that EBS root volume persist?
+Only if I specify that it should do so, using the AWS console or CLI. 
+You can control whether an EBS root volume is deleted when its associated instance is terminated. The default delete-on-termination behaviour depends on whether the volume is a root volume, or an additional volume. By default, the DeleteOnTermination attribute for root volumes is set to 'true.' However, this attribute may be changed at launch by using either the AWS Console or the command line. For an instance that is already running, the DeleteOnTermination attribute must be changed using the CLI.
+ 
+ I can use the AWS Console to add a role to an EC2 instance after that instance has been created and powered-up.
+ Yes
+ 
+ 

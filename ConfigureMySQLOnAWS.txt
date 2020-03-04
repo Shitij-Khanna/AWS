@@ -1,0 +1,27 @@
+Login to AWS:
+Select RDS from services
+Select Create DB
+Oracle is Not available on Free Tier so for testing and demo we can use mysql, for oracle we need license and paid tier, where we pay for the server.
+
+Complete the configurations :
+Give name of DB : mySqlDB1
+Create a new security group : lets say : RDS-SG , to be able to access this DB
+Do other general configurations like username, pwd, name of DB etc
+Size of disk to be selected as per requirement , like 20gb, etc and option can be selected to increase the size dynamically
+
+Complete the configurations and select 'Create database'
+
+After 10 minutes, the instance is up with the dns and port:
+E.g dns : mysqldb1.cwtcwndkemno.us-east-2.rds.amazonaws.com
+port : 3306
+
+However, it is not yet accessible publicly. 
+For that, go to Security Groups : 
+This can be done by selecting the security group from the bottom of the page of the newly created RDS instance.
+Select the Inbound section of the security group, and add the configuration / IP / Security group of your app server / web server, from where you want to access this RDS instance.
+We can also enable this RDS instance to be publicly accessible, but that is not desirable and secure.
+Ideal practice is to add the ip addresses of all servers in the inbound section, so that only they are able to connect to this DB.
+Or we can also add them to a common security group, and add this security group to the inbound section, so that all servers in that security group are able to connect to this DB.
+
+PS : For testing purposes we need to create a MYSQL DB, because Oracle is not available on a free tier. But, the process of creating a DB instance on AWS is the same, we will just need separate license and configurations for the instance we need to create.
+

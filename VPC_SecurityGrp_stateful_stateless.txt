@@ -1,0 +1,12 @@
+"Stateful" means the firewall monitors the "state" of the connection. Consider it like prepaid postage. If you receive a letter with prepaid postage, you can send it back without having to pay again. And if you send one with prepaid postage, your recipient can send it back without paying. In a security group, the return traffic (from either direction) is allowed as long as the initial traffic is allowed.
+
+So: 
+If your server receives a request on port 80 (HTTP), a Security Group will allow it to send the return traffic on whatever port it chooses (it will choose a random port between 1024 - 65535). 
+
+If your server sends a request to another server on port 80, the server it makes the request to will also choose one of those random ports and send the traffic back. The security group will see this conversation and allow the remote server to return the traffic. 
+
+If you are using a NACL, you will need to allow these ports since it is "stateless". So, if someone requests a website on port 80 from your server, you will need to allow ports 1024 - 65535 OUTBOUND in your NACL to allow the return traffic since an NACL does not monitor the conversation. If you wish to request a website from a remote server from your server, you will need to allow 1024 - 65535 INBOUND for that return traffic. 
+
+I hope this helps and I didn't make it more complicated!
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------

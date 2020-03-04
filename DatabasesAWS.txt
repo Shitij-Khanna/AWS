@@ -1,0 +1,12 @@
+Databases AWS : 
+
+Amazon's database service, relational database service, is called RDS 
+It has 2 main features : 
+ 1. Multi AZ - For disaster recovery 
+ 2. Read Replicas : For performance
+
+There are exam questions on whether you should be using multi AZ or Read replicas . 
+If you want to spread your DB across multiple Availability zones, then you want  Multi AZ, 
+If you wanna try and boost the DB performance, then you go for read replica.
+
+ 
